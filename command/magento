@@ -1,0 +1,3 @@
+#!/bin/bash
+
+command/docker php bin/magento "$@"
