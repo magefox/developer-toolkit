@@ -1,7 +1,5 @@
-# Developer Toolkit
-Docker box for local development
-
-## Documentation
+# Magento 2 Developer Toolkit
+Docker box for local magento 2 development
 
 ## Prerequisites
 
@@ -11,9 +9,9 @@ This setup assumes you are running Docker on a computer with at least 4GB of all
 - Nginx on port 80, 443
 - Mysql on port 3306
 - Elastic Search on port 9200, 9300
-- Mail Hog on port 1025, 8025
+- MailHog on port 1025, 8025
 
-You need to create the **.env** file in the root folder. You can look at the **.env.sample.**
+You need to create the **.env** file in the root folder. You can look at the **.env.sample**
 
 This configuration has been tested on Linux, MacOS. Windows is supported through the use of Docker on WSL.
 
