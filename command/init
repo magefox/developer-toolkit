@@ -3,6 +3,25 @@
 green=$(tput setaf 2)
 normal=$(tput sgr0)
 
+HOST_FILE="/etc/hosts"
+BEGIN_HOST_FILE_BLOCK="# Added by Magefox developer toolkit"
+END_HOST_FILE_BLOCK="# End of Magefox developer toolkit section"
+
+_LINE_TO_EDIT=$(grep -n "${END_HOST_FILE_BLOCK}" ${HOST_FILE} | head -1 | cut -d: -f1)
+echo "$_LINE_TO_EDIT"
+
+add_host_file() {
+    if [[ -n "${_LINE_TO_EDIT}" ]]; then
+        # else insert it directly
+        sudo sed -i .bak "${_LINE_TO_EDIT}i\192.168.1.2 domain1.com" ${HOST_FILE}
+    else
+        # if the line we want to add is empty, append it
+        sudo -- sh -c -e "echo '${BEGIN_HOST_FILE_BLOCK}' >> ${HOST_FILE}"
+        sudo -- sh -c -e "echo '127.0.0.1 ${BASE_URL}' >> ${HOST_FILE}"
+        sudo -- sh -c -e "echo '${END_HOST_FILE_BLOCK}' >> ${HOST_FILE}"
+    fi
+}
+
 if [ -f .env ]; then
     source .env
     echo "${green}Preparing source code ...${normal}"
@@ -23,10 +42,11 @@ if [ -f .env ]; then
     fi
 
     echo "${green}Starting docker containers ...${normal}"
-    command/docker stop
-    command/docker start
-    command/docker php composer install
-    command/magento setup:install --base-url="${BASE_URL}" --db-host="db" --db-name="${DATABASE}" --db-user="root" --db-password="magento" --backend-frontname="admin" --admin-firstname="Admin" --admin-lastname="Admin" --admin-user="admin" --admin-password="admin123" --admin-email="admin@localhost.com" --use-rewrites="1" --elasticsearch-host=elasticsearch
+    #command/docker stop
+    #command/docker start
+    #command/docker php composer install
+    #command/magento setup:install --base-url="http://${BASE_URL}/" --db-host="db" --db-name="${DATABASE}" --db-user="root" --db-password="magento" --backend-frontname="admin" --admin-firstname="Admin" --admin-lastname="Admin" --admin-user="admin" --admin-password="admin123" --admin-email="admin@localhost.com" --use-rewrites="1" --elasticsearch-host=elasticsearch
+    add_host_file
 else
 	echo "No .env file found."
 fi
