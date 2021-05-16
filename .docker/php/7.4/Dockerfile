@@ -20,7 +20,8 @@ RUN docker-php-ext-install gd intl mbstring xsl zip bcmath soap sockets pdo_mysq
 
 # Install xdebug
 RUN pecl channel-update pecl.php.net && pecl install xdebug
-RUN docker-php-ext-enable xdebug
+RUN docker-php-ext-enable xdebug \
+    && sed -i -e 's/^zend_extension/\;zend_extension/g' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # Download composer
 RUN curl -sS https://getcomposer.org/installer | php -- --version=1.10.22 --install-dir=/usr/local/bin --filename=composer

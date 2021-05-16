@@ -4,6 +4,9 @@ COMMAND=$1
 shift;
 ARGS="$@"
 
+green=$(tput setaf 2)
+normal=$(tput sgr0)
+
 if [ -n "$COMMAND" ]; then
     case "$COMMAND" in
         xdebug)
@@ -11,12 +14,12 @@ if [ -n "$COMMAND" ]; then
                 command/docker php sed -i -e 's/^zend_extension/\;zend_extension/g' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
                 command/docker stop
                 command/docker start
-                echo "Xdebug has been disabled."
+                echo "${green}Xdebug has been disabled.${normal}"
             elif [ "$1" == "enable" ]; then
                 command/docker php sed -i -e 's/^\;zend_extension/zend_extension/g' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
                 command/docker stop
                 command/docker start
-                echo "Xdebug has been enabled."
+                echo "${green}Xdebug has been enabled.${normal}"
             else
                 echo "Please specify either 'enable' or 'disable' as an argument"
             fi ;;

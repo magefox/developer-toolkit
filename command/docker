@@ -4,10 +4,16 @@ COMMAND=$1
 shift;
 ARGS="$@"
 
+green=$(tput setaf 2)
+normal=$(tput sgr0)
+
 if [ -n "$COMMAND" ]; then
     case "$COMMAND" in
         start) docker-compose up -d "$@" ;;
         stop) docker-compose stop "$@" ;;
+        cleanup)
+            echo "${green}Removing containers ...${normal}"
+            docker-compose rm --force --stop ;;
         php) docker-compose exec php "$@" ;;
         *) docker-compose "$@" ;;
     esac

@@ -1,7 +1,6 @@
 #!/bin/bash
 
 green=$(tput setaf 2)
-blue=$(tput setaf 4)
 normal=$(tput sgr0)
 
 if [ -f .env ]; then
@@ -9,13 +8,17 @@ if [ -f .env ]; then
     echo "${green}Preparing source code ...${normal}"
 
     if [ -n "$GIT_URL" ]; then
-        rm -rf src/
-        git clone $GIT_URL src
+        mkdir -p src
+        cd src/
+        git init
+        git remote add origin $GIT_URL
+        cd ..
     fi
 
     if [ -n "$GIT_BRANCH" ]; then
         cd src/
-        git checkout $GIT_BRANCH
+        git checkout -b $GIT_BRANCH
+        git pull origin $GIT_BRANCH
         cd ..
     fi
 

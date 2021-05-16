@@ -29,6 +29,7 @@ chmox +x command/*
  - `bin/toolkit init`: Init magento 2 project (Make sure existed .env file).
  - `bin/toolkit docker start`: Start the containers.
  - `bin/toolkit docker stop`: Stop the containers.
+ - `bin/toolkit docker cleaup`: Remove all docker containers and volumes.
  - `bin/toolkit magento`: Run the Magento CLI. Ex: `bin/magento cache:flush`
  - `bin/toolkit xdebug`: Enable/disable xdebug.
 
