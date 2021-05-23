@@ -1,29 +1,50 @@
 #!/bin/bash
 
+source lib/command/.utils
+
 COMMAND=$1
 shift;
 ARGS="$@"
-
-green=$(tput setaf 2)
-normal=$(tput sgr0)
 
 if [ -n "$COMMAND" ]; then
     case "$COMMAND" in
         xdebug)
             if [ "$1" == "disable" ]; then
-                command/docker php sed -i -e 's/^zend_extension/\;zend_extension/g' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-                command/docker stop
-                command/docker start
-                echo "${green}Xdebug has been disabled.${normal}"
+                lib/command/docker php sed -i -e 's/^zend_extension/\;zend_extension/g' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+                lib/command/docker restart
+                echo "${GREEN}Xdebug has been disabled.${NORMAL}"
             elif [ "$1" == "enable" ]; then
-                command/docker php sed -i -e 's/^\;zend_extension/zend_extension/g' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-                command/docker stop
-                command/docker start
-                echo "${green}Xdebug has been enabled.${normal}"
+                lib/command/docker php sed -i -e 's/^\;zend_extension/zend_extension/g' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+                lib/command/docker restart
+                echo "${GREEN}Xdebug has been enabled.${NORMAL}"
             else
-                echo "Please specify either 'enable' or 'disable' as an argument"
-            fi ;;
-        *) command/$COMMAND "$@" ;;
+                echo "${RED}Please specify either 'enable' or 'disable' as an argument.${NORMAL}"
+            fi 
+            ;;
+        mysql)
+            source .env
+
+            if [ "$1" == "import" ]; then
+                PS3='Which file do you want to import? '
+                select IMPORT_OPTION in `ls data/mysql`; do
+                    if [ -n "$IMPORT_OPTION" ] ; then
+                        MYSQL_IMPORT_FILE_NAME="data/mysql/$IMPORT_OPTION"
+                        lib/command/docker db mysql -uroot -pmagento $DATABASE < ${MYSQL_IMPORT_FILE_NAME}
+                        echo "${GREEN}The sql file is successfully imported to ${DATABASE} database${NORMAL}"
+                        exit 0
+                    else
+                        echo "${RED}Invalid sql file to import. Please try again.${NORMAL}"
+                    fi
+                done
+            elif [ "$1" == "export" ]; then
+                MYSQL_BACKUP_FILE_NAME="data/mysql/$(date +'%Y%m%d%H%M%S').sql"
+                lib/command/docker db mysqldump -uroot -pmagento ${DATABASE} > ${MYSQL_BACKUP_FILE_NAME}
+                echo "${GREEN}The database is successfully exported at ${MYSQL_BACKUP_FILE_NAME}${NORMAL}"
+            else
+                echo "${RED}Please specify either 'import' or 'export' as an argument.${NORMAL}"
+            fi
+            ;;
+        *) lib/command/$COMMAND "$@" ;;
     esac
 else
 	echo "Command not found."
