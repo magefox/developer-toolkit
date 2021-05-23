@@ -1,0 +1,28 @@
+#!/bin/bash
+
+source lib/command/.utils
+
+COMMAND=$1
+shift;
+ARGS="$@"
+
+if [ -n "$COMMAND" ]; then
+    case "$COMMAND" in
+        start) docker-compose up -d "$@" ;;
+        stop) docker-compose stop "$@" ;;
+        restart)
+            echo "${GREEN}Restarting docker containers ...${NORMAL}"
+            lib/command/docker stop
+            lib/command/docker start
+            ;;
+        cleanup)
+            echo "${GREEN}Removing containers ...${NORMAL}"
+            docker-compose rm --force --stop 
+            ;;
+        db) docker-compose exec -T db "$@" ;;
+        php) docker-compose exec php "$@" ;;
+        *) docker-compose "$@" ;;
+    esac
+else
+	echo "${RED}Docker command not found.${NORMAL}"
+fi

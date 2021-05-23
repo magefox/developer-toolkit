@@ -1,2 +1,4 @@
 .env
 src/
+data/mysql/*
+!data/mysql/.gitkeep

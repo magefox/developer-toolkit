@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if ! lib/command/docker php ls bin/n98-magerun2.phar 1> /dev/null 2>&1; then
+    lib/command/docker php curl -O https://files.magerun.net/n98-magerun2.phar
+    lib/command/docker php chmod +x n98-magerun2.phar
+    lib/command/docker php mv n98-magerun2.phar bin/n98-magerun2.phar
+fi
+
+lib/command/docker php bin/n98-magerun2.phar "$@"
