@@ -1,3 +1,30 @@
 NORMAL=$(tput sgr0)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+
+UNAME=`uname`
+
+is_mac_os () {
+    if [[ `uname` == 'Darwin' ]] ; then
+        return
+    fi
+
+    false
+}
+
+is_docker_installed () {
+    if [ `which docker` ]; then
+        return
+    fi
+
+    false
+}
+
+is_homebrew_installed () {
+    if [ `which brew` ]; then
+        return
+    fi
+
+    false
+}

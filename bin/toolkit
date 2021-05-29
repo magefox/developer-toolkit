@@ -6,7 +6,26 @@ COMMAND=$1
 shift;
 ARGS="$@"
 
+USAGE="Magefox Developer Toolkit
+
+${YELLOW}Usage:${NORMAL}
+    command [options] [arguments]
+
+${YELLOW}Available commands:${NORMAL}
+    ${GREEN}init              ${NORMAL}Init magento 2 project (Make sure existed .env file)
+    ${GREEN}docker            ${NORMAL}To start|stop|restart|cleanup Docker containers
+    ${GREEN}magento           ${NORMAL}Run the Magento CLI. Ex: \`bin/magento cache:flush\`
+    ${GREEN}xdebug            ${NORMAL}To enable|disable xdebug
+    ${GREEN}n98-magerun2      ${NORMAL}Run the n98-magerun2.phar CLI. Ex: \`bin/n98-magerun2 sys:cron:list\`
+    ${GREEN}mysql             ${NORMAL}To import|export database
+\n"
+
 if [ -n "$COMMAND" ]; then
+    if [ ! -f .env ]; then
+        echo "${RED}No .env file found.${NORMAL}"
+        exit 0
+    fi
+
     case "$COMMAND" in
         xdebug)
             if [ "$1" == "disable" ]; then
@@ -47,5 +66,6 @@ if [ -n "$COMMAND" ]; then
         *) lib/command/$COMMAND "$@" ;;
     esac
 else
-	echo "Command not found."
+	printf "$USAGE"
+    exit 0
 fi

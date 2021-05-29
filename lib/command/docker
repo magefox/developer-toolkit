@@ -6,6 +6,11 @@ COMMAND=$1
 shift;
 ARGS="$@"
 
+if ! is_docker_installed ; then
+    echo "${RED}Your computer not installed Docker. Please install and try again!${NORMAL}"
+    exit 0
+fi
+
 if [ -n "$COMMAND" ]; then
     case "$COMMAND" in
         start) docker-compose up -d "$@" ;;

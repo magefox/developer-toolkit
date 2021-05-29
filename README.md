@@ -27,14 +27,11 @@ chmox +x command/*
 
  There are lots of commands you can use in bin folder. But in this section I will list down those I think important and may use everyday
  - `bin/toolkit init`: Init magento 2 project (Make sure existed .env file).
- - `bin/toolkit docker start`: Start the containers.
- - `bin/toolkit docker stop`: Stop the containers.
- - `bin/toolkit docker restart`: Restart the containers.
- - `bin/toolkit docker cleaup`: Remove all docker containers and volumes.
+ - `bin/toolkit docker`: To start|stop|restart|cleanup Docker containers.
  - `bin/toolkit magento`: Run the Magento CLI. Ex: `bin/magento cache:flush`
- - `bin/toolkit xdebug`: enable/disable xdebug.
- - `bin/n98-magerun2`: Run the n98-magerun2.phar CLI. Ex: `bin/n98-magerun2 sys:cron:list`
- - `bin/mysql`: import/export database.
+ - `bin/toolkit xdebug`: To enable/disable xdebug.
+ - `bin/toolkit n98-magerun2`: Run the n98-magerun2.phar CLI. Ex: `bin/n98-magerun2 sys:cron:list`
+ - `bin/toolkit mysql`: To import/export database.
 
 ### Composer Authentication
 

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+source lib/command/.utils
+source .env
+
+COMMAND=$1
+shift;
+ARGS="$@"
+
+if [ "${MAGENTO_EDITION}" = "ce" ]; then
+    echo "${RED}Your magento edition not supporter this command.${NORMAL}"
+    exit 0;
+fi
+
+if [ -n "$COMMAND" ]; then
+    case "$COMMAND" in
+        build) docker-compose exec -e "MAGENTO_ROOT=/var/www/html" php cloud-build ;;
+        deploy) lib/command/docker php cloud-deploy ;;
+        post-deploy) lib/command/docker php cloud-post-deploy ;;
+        redeploy)
+            lib/command/docker php cloud-build
+            lib/command/docker php cloud-deploy
+            lib/command/docker php cloud-post-deploy
+            ;;
+        *) lib/command/docker php bin/magento-docker list ;;
+    esac
+else
+	echo "${RED}Magento cloud command not found.${NORMAL}"
+fi

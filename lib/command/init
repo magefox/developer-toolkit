@@ -8,7 +8,7 @@ add_hosts_file() {
     BEGIN_HOSTS_FILE_BLOCK="# Added by Magefox developer toolkit"
     END_HOSTS_FILE_BLOCK="# End of Magefox developer toolkit section"
 
-    echo "${GREEN}You may need enter root password to add record to hosts file.${NORMAL}";
+    echo "${GREEN}You may need enter root password to add DNS record to hosts file.${NORMAL}";
 
     if grep -q "${END_HOSTS_FILE_BLOCK}" ${HOSTS_FILE}; then
         if ! grep -q "${HOSTS_LINE}" ${HOSTS_FILE}; then
@@ -23,31 +23,27 @@ add_hosts_file() {
     fi
 }
 
-if [ -f .env ]; then
-    source .env
-    echo "${GREEN}Preparing source code ...${NORMAL}"
+source .env
+echo "${GREEN}Preparing source code ...${NORMAL}"
 
-    if [ -n "$GIT_URL" ]; then
-        mkdir -p src
-        cd src/
-        git init
-        git remote add origin $GIT_URL
-        cd ..
-    fi
-
-    if [ -n "$GIT_BRANCH" ]; then
-        cd src/
-        git checkout -b $GIT_BRANCH
-        git pull origin $GIT_BRANCH
-        cd ..
-    fi
-
-    echo "${GREEN}Starting docker containers ...${NORMAL}"
-    lib/command/docker stop
-    lib/command/docker start
-    lib/command/docker php composer install
-    lib/command/magento setup:install --base-url="http://${BASE_URL}/" --db-host="db" --db-name="${DATABASE}" --db-user="root" --db-password="magento" --backend-frontname="admin" --admin-firstname="Admin" --admin-lastname="Admin" --admin-user="admin" --admin-password="admin123" --admin-email="admin@localhost.com" --use-rewrites="1" --elasticsearch-host=elasticsearch
-    add_hosts_file
-else
-	echo "${RED}No .env file found.${NORMAL}"
+if [ -n "$GIT_URL" ]; then
+    mkdir -p src
+    cd src/
+    git init
+    git remote add origin $GIT_URL
+    cd ..
 fi
+
+if [ -n "$GIT_BRANCH" ]; then
+    cd src/
+    git checkout -b $GIT_BRANCH
+    git pull origin $GIT_BRANCH
+    cd ..
+fi
+
+echo "${GREEN}Starting docker containers ...${NORMAL}"
+lib/command/docker stop
+lib/command/docker start
+lib/command/docker php composer install
+lib/command/magento setup:install --base-url="http://${BASE_URL}/" --db-host="db" --db-name="${DATABASE}" --db-user="root" --db-password="magento" --backend-frontname="admin" --admin-firstname="Admin" --admin-lastname="Admin" --admin-user="admin" --admin-password="admin123" --admin-email="admin@localhost.com" --use-rewrites="1" --elasticsearch-host=elasticsearch
+add_hosts_file
